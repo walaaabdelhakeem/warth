@@ -126,6 +126,12 @@ export class NavigationService {
       active: false,
     },
     {
+      label: 'organization2',
+      icon: 'grid',
+      route: '/organization2',
+      active: false,
+    },
+    {
       label: 'Zivildiener',
       icon: 'user',
       route: '/civilian-service',
