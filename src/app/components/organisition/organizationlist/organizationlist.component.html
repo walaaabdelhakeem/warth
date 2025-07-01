@@ -8,28 +8,28 @@
         <mat-icon>menu</mat-icon>
       </button>
 
-      <mat-menu #burgerMenu="matMenu" >
-         <button mat-menu-item >
+      <mat-menu #burgerMenu="matMenu">
+         <button mat-menu-item>
           <mat-icon>business</mat-icon>
           <span>Organisationseinheiten Alle</span>
         </button>
-        <button mat-menu-item >
+        <button mat-menu-item>
           <mat-icon>business_center</mat-icon>
           <span>Organisationseinheiten Aktuelle</span>
         </button>
-        <button mat-menu-item >
+        <button mat-menu-item>
           <mat-icon>account_tree</mat-icon>
           <span>Hierarchie verwalten</span>
         </button>
-        <button mat-menu-item >
+        <button mat-menu-item>
           <mat-icon>schema</mat-icon>
           <span>Organigramm erstellen</span>
         </button>
-        <button mat-menu-item >
+        <button mat-menu-item>
           <mat-icon>sync</mat-icon>
           <span>Mit HR-System synchronisieren</span>
         </button>
-        <button mat-menu-item >
+        <button mat-menu-item>
           <mat-icon>verified</mat-icon>
           <span>Struktur validieren</span>
         </button>
@@ -47,21 +47,22 @@
     </div>
 
     <div class="table-actions">
-      <mat-checkbox [(ngModel)]="includeInactive" (change)="toggleInactive()">
+      <mat-checkbox [(ngModel)]="includeInactive" (change)="toggleInactive()" aria-label="Inklusive inaktive Einheiten">
         inkl. inaktive
       </mat-checkbox>
 
       <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Suche</mat-label>
         <button matPrefix mat-icon-button (click)="applyFilter()" aria-label="Suchen">
           <mat-icon>search</mat-icon>
         </button>
-        <input matInput placeholder="Suche" [(ngModel)]="searchTerm" />
-        <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="resetFilter()">
+        <input matInput [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()" aria-label="Suchbegriff eingeben"/>
+        <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="resetFilter()" aria-label="Suche zurücksetzen">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" (click)="createOrganisationseinheit()">
+      <button mat-raised-button color="primary" (click)="createOrganisationseinheit()" aria-label="Neue Organisationseinheit erstellen">
         <mat-icon>add</mat-icon>
         Neu
       </button>
@@ -69,7 +70,7 @@
   </div>
 
   <div class="table-content">
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" aria-label="Liste der Organisationseinheiten">
 
       <ng-container matColumnDef="kurzbezeichnung">
         <mat-header-cell *matHeaderCellDef>Kurzbez.</mat-header-cell>
@@ -83,7 +84,7 @@
 
       <ng-container matColumnDef="leitung">
         <mat-header-cell *matHeaderCellDef>Leitung</mat-header-cell>
-        <mat-cell *matCellDef="let org">{{ org.leiter?.vorname }}{{" "}}{{org.leiter?.nachname}}</mat-cell>
+        <mat-cell *matCellDef="let org">{{ org.leiter?.vorname }} {{org.leiter?.nachname}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="uebergeordneteEinheit">
@@ -102,7 +103,14 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <mat-row 
+        *matRowDef="let row; columns: displayedColumns" 
+        (click)="selectRow(row)"
+        [class.selected-row]="selectedRows.includes(row)"
+       >
+      </mat-row>
     </mat-table>
+
+    <!-- Add pagination -->
   </div>
 </div>

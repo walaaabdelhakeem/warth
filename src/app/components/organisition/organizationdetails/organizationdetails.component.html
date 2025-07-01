@@ -1,0 +1,115 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2 class="form-title">
+      {{ isNewOrganisationseinheit ? "Neue Organisationseinheit anlegen" : "Organisationseinheit bearbeiten" }}
+    </h2>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Daten werden geladen...</p>
+  </div>
+
+  <!-- Form Content -->
+  <div class="form-content" *ngIf="!loading">
+    <form [formGroup]="organisationseinheitForm">
+      <!-- Grunddaten Section -->
+      <div class="section">
+        <h3 class="section-title">Grunddaten</h3>
+        
+        <div class="form-fields">
+          <!-- Row 1 -->
+          <div class="form-row">
+            <div class="form-field">
+              <div class="label-input-group">
+                <label class="field-label required">Bezeichnung:</label>
+                <input type="text" formControlName="bezeichnung" placeholder="Bezeichnung eingeben">
+              </div>
+              <div class="error-message" *ngIf="organisationseinheitForm.get('bezeichnung')?.hasError('required')">
+                Bezeichnung ist erforderlich
+              </div>
+            </div>
+
+            <div class="form-field">
+              <div class="label-input-group">
+                <label class="field-label">Kurzbezeichnung:</label>
+                <input type="text" formControlName="kurzbezeichnung" placeholder="Kurzbezeichnung eingeben">
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="form-row">
+            <div class="form-field">
+              <div class="label-input-group">
+                <label class="field-label">Übergeordnete Org.Einheit:</label>
+                <select formControlName="uebergeordneteEinheitId">
+                  <option value="" disabled selected>Bitte wählen</option>
+                  <option *ngFor="let einheit of uebergeordneteEinheiten" [value]="einheit">{{ einheit }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <div class="label-input-group">
+                <label class="field-label">Leitung Org.Einheit:</label>
+                <select formControlName="leitung">
+                  <option value="" disabled selected>Bitte wählen</option>
+                  <option *ngFor="let person of leitungPersonen" [value]="person">{{ person }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="form-row">
+            <!-- Gültig von -->
+            <div class="form-field">
+              <div class="label-input-group">
+                <label class="field-label">Gültig von:</label>
+                <input
+                  matInput
+                  [matDatepicker]="startDatePicker"
+                  formControlName="gueltigVon"
+                  placeholder="TT.MM.JJJJ"
+                  type="text"
+                />
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+              </div>
+            </div>
+
+            <!-- E-Mail -->
+            <div class="form-field">
+              <div class="label-input-group">
+                <label class="field-label">E-Mail:</label>
+                <input
+                  type="email"
+                  formControlName="email"
+                  placeholder="E-Mail-Adresse eingeben"
+                  [class.invalid]="organisationseinheitForm.get('email')?.invalid && organisationseinheitForm.get('email')?.touched"
+                />
+              </div>
+              <div class="error-message" *ngIf="organisationseinheitForm.get('email')?.hasError('email') && organisationseinheitForm.get('email')?.touched">
+                Bitte geben Sie eine gültige E-Mail-Adresse ein
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="onCancel()" [disabled]="saving">
+          Abbrechen
+        </button>
+       <button type="button" class="save-btn" (click)="onEditOrSubmit()" [disabled]="saving">
+   {{ isFormEditable ? 'Speichern' : 'Bearbeiten' }}
+</button>
+
+      </div>
+    </form>
+  </div>
+</div>

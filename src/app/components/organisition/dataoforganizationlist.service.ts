@@ -512,4 +512,17 @@ export class DataoforganizationlistService {
   getAllData(): Datalistorganizationanc[] {
     return this.datalistorganization;
   }
+  // تحديث مؤسسة موجودة
+updateOrganization(updated: Datalistorganizationanc): void {
+  const index = this.datalistorganization.findIndex(org => org.id === updated.id);
+  if (index !== -1) {
+    this.datalistorganization[index] = { ...this.datalistorganization[index], ...updated };
+  }
+}
+
+// إضافة مؤسسة جديدة
+addOrganization(newOrg: Datalistorganizationanc): void {
+  this.datalistorganization.push(newOrg);
+}
+
 }

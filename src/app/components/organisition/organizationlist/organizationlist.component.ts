@@ -14,11 +14,15 @@ import { OrganisationseinheitService } from '../../../services/organisationseinh
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Datalistorganizationanc } from '../../../models/datalistorganizationanc';
 import { DataoforganizationlistService } from '../dataoforganizationlist.service';
+import { MatDialog } from '@angular/material/dialog';
+  import { OrganisationseinheitDetailComponent } from './../../organisationseinheit/organisationseinheit-detail/organisationseinheit-detail.component';
+import { Router } from '@angular/router';
+import { SharedDataServiceService } from '../servicesorganize/shared-data-service.service';
 
 @Component({
   selector: 'app-organizationlist',
   imports: [
-    CommonModule,
+  CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
@@ -35,7 +39,6 @@ import { DataoforganizationlistService } from '../dataoforganizationlist.service
   styleUrl: './organizationlist.component.scss'
 })
 export class OrganizationlistComponent implements OnInit {
-  constructor(private dataoforganizationlistService: DataoforganizationlistService) { }
   @Output() organisationseinheitSelected = new EventEmitter<string>();
   dataSource: MatTableDataSource<Datalistorganizationanc> = new MatTableDataSource();
   includeInactive: boolean = false;
@@ -49,8 +52,15 @@ export class OrganizationlistComponent implements OnInit {
   ];
   searchTerm: string = '';
   isWhiteBg: boolean = true;
-  datalistoftaple: Datalistorganizationanc[] = []
-  
+  datalistoftaple: Datalistorganizationanc[] = [];
+  selectedRows: Datalistorganizationanc[] = [];
+
+  constructor(
+    private dataoforganizationlistService: DataoforganizationlistService,
+    private router: Router,
+    private sharedDataService: SharedDataServiceService
+  ) { }
+
   applyFilter(): void {
     this.dataSource.filter = this.searchTerm.trim().toLowerCase();
   }
@@ -63,7 +73,6 @@ export class OrganizationlistComponent implements OnInit {
   formatDate(dateString: string): string {
     if (!dateString) return '';
 
-
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
     return date.toLocaleDateString('de-AT', {
@@ -72,16 +81,19 @@ export class OrganizationlistComponent implements OnInit {
       year: 'numeric',
     });
   }
+
   createOrganisationseinheit(): void {
-    // When creating a new organisationseinheit, emit 'new' to indicate new organisationseinheit
-    this.organisationseinheitSelected.emit('new');
+    this.sharedDataService.clearSelectedOrganization();
+
+    this.router.navigate(['/organization/new']);
   }
-   toggleInactive(): void {
+
+  toggleInactive(): void {
     this.includeInactive = !this.includeInactive;
     if (this.includeInactive) {
-      this.dataSource.data = this.dataoforganizationlistService.getAllData(); // Show all
+      this.dataSource.data = this.dataoforganizationlistService.getAllData();
     } else {
-      this.dataSource.data = this.dataoforganizationlistService.getActiveData(); // Show only active
+      this.dataSource.data = this.dataoforganizationlistService.getActiveData();
     }
     this.applyFilter();
   }
@@ -94,6 +106,15 @@ export class OrganizationlistComponent implements OnInit {
         data.bezeichnung?.toLowerCase().includes(filter)
       );
     };
+this.reloadData();
   }
+reloadData() {
+  this.dataSource.data = this.dataoforganizationlistService.getActiveData();
+}
 
+  selectRow(row: Datalistorganizationanc): void {
+    this.selectedRows = [row]; // Clear previous selections and select only the current row
+    this.sharedDataService.setSelectedOrganization(row);
+    this.router.navigate(['/organization/new']);
+  }
 }

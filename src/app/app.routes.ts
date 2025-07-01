@@ -44,6 +44,7 @@ export const routes: Routes = [
   { path: 'contracts', component: TimeTrackingTableComponent },
   { path: 'organization', component: OrganisationseinheitListComponent },
   { path: 'organization2',component:OrganizationlistComponent},
+  { path: 'organization/new',component:OrganizationdetailsComponent},
   { path: 'civilian-service', component: TimeTrackingTableComponent },
   { path: 'reports', component: TimeTrackingTableComponent },
   { path: 'exit', component: TimeTrackingTableComponent },
