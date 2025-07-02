@@ -1,0 +1,116 @@
+<div class="table-container">
+  <div class="table-header">
+    <div class="table-title-section">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="burgerMenu"
+        aria-label="Menü öffnen">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <mat-menu #burgerMenu="matMenu">
+         <button mat-menu-item>
+          <mat-icon>business</mat-icon>
+          <span>Organisationseinheiten Alle</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>business_center</mat-icon>
+          <span>Organisationseinheiten Aktuelle</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>account_tree</mat-icon>
+          <span>Hierarchie verwalten</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>schema</mat-icon>
+          <span>Organigramm erstellen</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>sync</mat-icon>
+          <span>Mit HR-System synchronisieren</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>verified</mat-icon>
+          <span>Struktur validieren</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>download</mat-icon>
+          <span>Organisationseinheiten exportieren</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>cloud_upload</mat-icon>
+          <span>Informationen hochladen</span>
+        </button>
+      </mat-menu>
+
+      <h2 class="table-title">Organisationseinheiten</h2>
+    </div>
+
+    <div class="table-actions">
+      <mat-checkbox [(ngModel)]="includeInactive" (change)="toggleInactive()" aria-label="Inklusive inaktive Einheiten">
+        inkl. inaktive
+      </mat-checkbox>
+
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Suche</mat-label>
+        <button matPrefix mat-icon-button (click)="applyFilter()" aria-label="Suchen">
+          <mat-icon>search</mat-icon>
+        </button>
+        <input matInput [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()" aria-label="Suchbegriff eingeben"/>
+        <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="resetFilter()" aria-label="Suche zurücksetzen">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="createOrganisationseinheit()" aria-label="Neue Organisationseinheit erstellen">
+        <mat-icon>add</mat-icon>
+        Neu
+      </button>
+    </div>
+  </div>
+
+  <div class="table-content">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" aria-label="Liste der Organisationseinheiten">
+
+      <ng-container matColumnDef="kurzbezeichnung">
+        <mat-header-cell *matHeaderCellDef>Kurzbez.</mat-header-cell>
+        <mat-cell *matCellDef="let org">{{ org.kurzBezeichnung }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="bezeichnung">
+        <mat-header-cell *matHeaderCellDef>Bezeichnung</mat-header-cell>
+        <mat-cell *matCellDef="let org">{{ org.bezeichnung }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="leitung">
+        <mat-header-cell *matHeaderCellDef>Leitung</mat-header-cell>
+        <mat-cell *matCellDef="let org">{{ org.leiter?.vorname }} {{org.leiter?.nachname}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="uebergeordneteEinheit">
+        <mat-header-cell *matHeaderCellDef>Überg. Einheit</mat-header-cell>
+        <mat-cell *matCellDef="let org">{{ org.parent?.kurzBezeichnung }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="gueltigVon">
+        <mat-header-cell *matHeaderCellDef>Gültig von</mat-header-cell>
+        <mat-cell *matCellDef="let org">{{ formatDate(org.gueltigVon) }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="gueltigBis">
+        <mat-header-cell *matHeaderCellDef>Gültig bis</mat-header-cell>
+        <mat-cell *matCellDef="let org">{{ formatDate(org.gueltigBis) }}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row 
+        *matRowDef="let row; columns: displayedColumns" 
+        (click)="selectRow(row)"
+        [class.selected-row]="selectedRows.includes(row)"
+       >
+      </mat-row>
+    </mat-table>
+
+    <!-- Add pagination -->
+  </div>
+</div>

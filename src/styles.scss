@@ -1,7 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
 @use "styles/variables" as *;
 @import "styles/components/index";
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
 
+/* Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -11,17 +14,12 @@
 html,
 body {
   height: 100%;
-  overflow: hidden; /* Prevent scrolling at document level */
   min-height: 100vh;
-}
-
-body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
-  position: relative; /* Enable proper positioning context */
-  overflow: hidden;
 }
 
+/* Layout Structure */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -35,7 +33,20 @@ body {
   overflow: hidden;
 }
 
-// Custom tooltip styling
+/* Responsive Containers */
+.responsive-container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+
+  @screen sm {
+    width: 100%;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Component Styles */
 .custom-tooltip {
   font-size: 14px !important;
   max-width: 250px !important;
@@ -46,18 +57,36 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
-
-/* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-.responsive-container {
-  @apply w-11/12 mx-auto sm:w-full sm:px-2;
-}
+/* Material Icons Fix */
 .mat-icon {
-  @apply h-auto w-auto #{!important};
+  height: auto !important;
+  width: auto !important;
 }
 
-.responsive-container {
-  @apply w-4/5 mx-auto sm:w-full sm:px-2;
+/* Form Validation Styles */
+.required-field::after {
+  content: " *";
+  color: #ef4444;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.invalid-input {
+  border-color: #ef4444;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background-color: white;
+    overflow: visible;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }
