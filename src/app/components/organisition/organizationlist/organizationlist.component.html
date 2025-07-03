@@ -51,16 +51,17 @@
         inkl. inaktive
       </mat-checkbox>
 
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Suche</mat-label>
-        <button matPrefix mat-icon-button (click)="applyFilter()" aria-label="Suchen">
+      <div class="search-container">
+          <input
+            type="text"
+            placeholder="Suche"
+            [(ngModel)]="searchTerm"
+            (keyup)="applyFilter()"
+            class="search-input"
+            
+          />
           <mat-icon>search</mat-icon>
-        </button>
-        <input matInput [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()" aria-label="Suchbegriff eingeben"/>
-        <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="resetFilter()" aria-label="Suche zurücksetzen">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
+        </div>
 
       <button mat-raised-button color="primary" (click)="createOrganisationseinheit()" aria-label="Neue Organisationseinheit erstellen">
         <mat-icon>add</mat-icon>
