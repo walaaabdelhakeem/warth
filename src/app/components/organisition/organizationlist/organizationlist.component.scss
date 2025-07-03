@@ -27,7 +27,15 @@
   color: white;
   margin: 0;
 }
+.mat-mdc-menu-item .mat-icon {
+    margin-right: 12px !important;
+    color: #338e9c !important;
+    opacity: 0.9;
+}
+.mat-mdc-menu-item span{
+      opacity: 0.8;
 
+}
 /* ====== Menu Button ====== */
 .mat-mdc-button-base {
   background: rgba(255, 255, 255, 0.12) !important;
