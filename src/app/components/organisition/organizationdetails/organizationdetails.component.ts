@@ -17,6 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SharedDataServiceService } from '../servicesorganize/shared-data-service.service';
 import { Datalistorganizationanc } from '../../../models/datalistorganizationanc';
 import { DataoforganizationlistService } from '../dataoforganizationlist.service';
+import { MatSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-organizationdetails',
@@ -34,7 +35,7 @@ import { DataoforganizationlistService } from '../dataoforganizationlist.service
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-     MatSnackBarModule
+     MatSnackBarModule,MatSpinner
   ],
   templateUrl: './organizationdetails.component.html',
   styleUrl: './organizationdetails.component.scss',
@@ -68,16 +69,14 @@ export class OrganizationdetailsComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = this.dataoforganizationlistService.getActiveData();
 
-  // جَمع كل الأشخاص في leiter من البيانات الحالية
   this.leitungPersonen = this.dataSource
     .filter(org => org.leiter?.vorname && org.leiter?.nachname)
     .map(org => `${org.leiter?.vorname} ${org.leiter?.nachname}`)
-    .filter((value, index, self) => self.indexOf(value) === index); // حذف التكرار
+    .filter((value, index, self) => self.indexOf(value) === index); 
 this.uebergeordneteEinheiten = this.dataSource
     .map(org => org.parent?.kurzBezeichnung)
-    .filter((val): val is string => !!val) // تأكد من أن القيمة ليست undefined/null
-    .filter((value, index, self) => self.indexOf(value) === index); // حذف التكرارات
-  // الاستماع للبيانات المختارة من sharedDataService
+    .filter((val): val is string => !!val)
+    .filter((value, index, self) => self.indexOf(value) === index); 
   this.sharedDataService.selectedOrganization$.subscribe(org => {
     if (org) {
       this.isNewOrganisationseinheit = false;
@@ -126,11 +125,9 @@ this.uebergeordneteEinheiten = this.dataSource
   }
   onEditOrSubmit(): void {
   if (!this.isFormEditable) {
-    // افتح الحقول للتعديل
     this.organisationseinheitForm.enable();
     this.isFormEditable = true;
   } else {
-    // الحقول بالفعل مفتوحة → نفذ الحفظ
     this.onSubmit();
     console.log('onSubmit called');
 
