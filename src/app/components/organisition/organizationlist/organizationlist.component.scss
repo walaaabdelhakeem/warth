@@ -14,7 +14,9 @@
   color: white;
   border: 1px solid #0c4450;
 }
-
+.mat-icon{
+  overflow:visible !important;
+}
 .table-title-section {
   display: flex;
   align-items: center;
@@ -38,18 +40,18 @@
 }
 /* ====== Menu Button ====== */
 .mat-mdc-button-base {
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: linear-gradient(to right, #2c3e50, #34495e) !important;
   transition: all 0.25s ease !important;
   border-radius: 4px !important;
-  width: 40px !important;
   height: 40px !important;
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
-.menu-button:hover {
-  background: rgba(255, 255, 255, 0.25) !important;
+.mat-mdc-button-base:hover {
+  background: linear-gradient(to right, #3e5870, #4a5d78) !important;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
