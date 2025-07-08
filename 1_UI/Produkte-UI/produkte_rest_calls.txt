@@ -1,4 +1,12 @@
- 
+
+Component-names:
+
+ng g c components/produkte2/produkte-list
+ng g c components/produkte2/produkte-detail
+
+------------
+
+
 List: GET
 http://localhost:29200/at.gv.bmi.getit3-d/srv/v1/produkte
 
