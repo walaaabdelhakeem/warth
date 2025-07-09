@@ -169,3 +169,7 @@ mat-row:nth-child(even) {
 mat-checkbox {
   color: white !important;
 }
+.deleted-row {
+  color: #b91c1c !important; /* نص أحمر غامق */
+  font-weight: bold;
+}

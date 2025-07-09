@@ -69,6 +69,8 @@
         *matRowDef="let row; columns: displayedColumns" 
         (click)="selectRow(row)"
         [class.selected-row]="selectedRows.includes(row)"
+          [ngClass]="{ 'deleted-row': row.deleted }"
+
        >
       </mat-row>
     </mat-table>

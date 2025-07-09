@@ -15,9 +15,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 
-import { SharedDataServiceService } from '../servicesorganize/shared-data-service.service';
+import { SharedDataServiceService } from '../organisation-service/organisetion-service.service';
 import { Datalistorganizationanc } from '../../../models/datalistorganizationanc';
-import { DataoforganizationlistService } from '../dataoforganizationlist.service';
+import { DataoforganizationlistService } from '../dataoforganisation-list.service';
 
 @Component({
   selector: 'app-organizationdetails',
@@ -35,10 +35,10 @@ import { DataoforganizationlistService } from '../dataoforganizationlist.service
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatSnackBarModule,DatePipe
+    MatSnackBarModule, DatePipe
   ],
-  templateUrl: './organizationdetails.component.html',
-  styleUrl: './organizationdetails.component.scss',
+  templateUrl: './organisation-details.component.html',
+  styleUrl: './organisation-details.component.scss',
 })
 export class OrganizationdetailsComponent implements OnInit {
   organisationseinheitForm: FormGroup;
@@ -59,7 +59,7 @@ export class OrganizationdetailsComponent implements OnInit {
     private router: Router,
     private sharedDataService: SharedDataServiceService,
     private dataoforganizationlistService: DataoforganizationlistService,
-    private snackBar: MatSnackBar,  private datePipe: DatePipe,
+    private snackBar: MatSnackBar, private datePipe: DatePipe,
 
   ) {
     this.organisationseinheitForm = this.createForm();
@@ -114,7 +114,7 @@ export class OrganizationdetailsComponent implements OnInit {
       gueltigBis: [''],
       leitung: [''],
       kostenstelle: [''],
-      
+
       fax: [''],
       email: ['', Validators.email],
     });
@@ -207,13 +207,13 @@ export class OrganizationdetailsComponent implements OnInit {
   }
 
   formatDateToDDMMYYYY = (date: Date | null): string => {
-  if (!date || isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('de-AT', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
-};
+    if (!date || isNaN(date.getTime())) return '';
+    return date.toLocaleDateString('de-AT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
 
 }

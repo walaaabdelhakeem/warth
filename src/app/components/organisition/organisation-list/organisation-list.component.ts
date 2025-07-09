@@ -10,19 +10,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 
-import { OrganisationseinheitService } from '../../../services/organisationseinheit.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Datalistorganizationanc } from '../../../models/datalistorganizationanc';
-import { DataoforganizationlistService } from '../dataoforganizationlist.service';
-import { MatDialog } from '@angular/material/dialog';
-  import { OrganisationseinheitDetailComponent } from './../../organisationseinheit/organisationseinheit-detail/organisationseinheit-detail.component';
+import { DataoforganizationlistService } from '../dataoforganisation-list.service';
 import { Router } from '@angular/router';
-import { SharedDataServiceService } from '../servicesorganize/shared-data-service.service';
+import { SharedDataServiceService } from '../organisation-service/organisetion-service.service';
 
 @Component({
   selector: 'app-organizationlist',
   imports: [
-  CommonModule,
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
@@ -35,8 +32,8 @@ import { SharedDataServiceService } from '../servicesorganize/shared-data-servic
     MatProgressSpinnerModule,
     MatMenuModule,
   ],
-  templateUrl: './organizationlist.component.html',
-  styleUrl: './organizationlist.component.scss'
+  templateUrl: './organisation-list.component.html',
+  styleUrl: './organisation-list.component.scss'
 })
 export class OrganizationlistComponent implements OnInit {
   @Output() organisationseinheitSelected = new EventEmitter<string>();
@@ -89,14 +86,16 @@ export class OrganizationlistComponent implements OnInit {
   }
 
   toggleInactive(): void {
-    this.includeInactive = !this.includeInactive;
+
     if (this.includeInactive) {
       this.dataSource.data = this.dataoforganizationlistService.getAllData();
     } else {
       this.dataSource.data = this.dataoforganizationlistService.getActiveData();
     }
+
     this.applyFilter();
   }
+
 
   ngOnInit(): void {
     this.dataSource.data = this.dataoforganizationlistService.getActiveData();
@@ -106,11 +105,11 @@ export class OrganizationlistComponent implements OnInit {
         data.bezeichnung?.toLowerCase().includes(filter)
       );
     };
-this.reloadData();
+    this.reloadData();
   }
-reloadData() {
-  this.dataSource.data = this.dataoforganizationlistService.getActiveData();
-}
+  reloadData() {
+    this.dataSource.data = this.dataoforganizationlistService.getActiveData();
+  }
 
   selectRow(row: Datalistorganizationanc): void {
     this.selectedRows = [row]; // Clear previous selections and select only the current row
