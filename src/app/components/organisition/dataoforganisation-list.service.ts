@@ -468,7 +468,7 @@ export class DataoforganizationlistService {
   {
     "id": "252900000000017",
     "version": 5,
-    "deleted": false,
+    "deleted": true,
     "bezeichnung": "IV/1/Test",
     "kurzBezeichnung": "IV/1/Test Neueintrag",
     "gueltigVon": "2023-12-01T00:00:00.000",
