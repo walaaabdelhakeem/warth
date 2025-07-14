@@ -20,6 +20,7 @@ import { AbsenceListComponent } from './components/absence/absence-list/absence-
 import { AbsenceComponent } from './components/absence/absence/absence.component';
 import { OrganizationdetailsComponent } from './components/organisition/organisation-details/organisation-details.component';
 import { OrganizationlistComponent } from './components/organisition/organisation-list/organisation-list.component';
+import { PresonsListComponent } from './components/persons/presons-list/presons-list.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'edit-absence', pathMatch: 'full' },
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'history', component: TimeTrackingTableComponent },
   { path: 'timestamps', component: StempelzeitListComponent },
   { path: 'persons', component: PersonenComponent },
+  { path: 'preson2', component: PresonsListComponent },
   { path: 'person-form', component: PersonFormComponent },
   { path: 'personen', component: PersonenListComponent },
   { path: 'personen/:id', component: PersonenDetailComponent },
