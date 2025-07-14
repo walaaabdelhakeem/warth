@@ -132,6 +132,12 @@ export class NavigationService {
       active: false,
     },
     {
+      label: 'preson2',
+      icon: 'users',
+      route: '/preson2',
+      active: false,
+    },
+    {
       label: 'Zivildiener',
       icon: 'user',
       route: '/civilian-service',
