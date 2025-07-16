@@ -1,8 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Datalistorganizationanc } from '../../../models/datalistorganizationanc';
 import { Router } from '@angular/router';
 import { SharedDataServiceService } from '../../organisition/organisation-service/organisetion-service.service';
-import { DataoforganizationlistService } from '../../organisition/dataoforganisation-list.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -13,8 +11,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { v4 as uuidv4 } from 'uuid'; // ← نحتاج uuid
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PersonListServiceService } from '../persons-services/person-list-service.service';
+import { PersonListInterface } from '../persons-interface/person-list-interface';
 @Component({
   selector: 'app-presons-list',
  imports: [
@@ -36,23 +36,26 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class PresonsListComponent implements OnInit {
   @Output() organisationseinheitSelected = new EventEmitter<string>();
-  dataSource: MatTableDataSource<Datalistorganizationanc> = new MatTableDataSource();
+  dataSource: MatTableDataSource<PersonListInterface> = new MatTableDataSource();
   includeInactive: boolean = false;
   displayedColumns: string[] = [
-    'kurzbezeichnung',
-    'bezeichnung',
-    'leitung',
-    'uebergeordneteEinheit',
-    'gueltigVon',
-    'gueltigBis',
+    'aktiv',
+    'geprueft',
+    'nachname',
+    'vorname',
+    'mitarbeiterart',
+    'stundenkontingentJaehrlich',
+    'stundenGeplantDiesesJahr',
+    'stundenGebuchtDiesesJahr',
+    'rolle'
   ];
   searchTerm: string = '';
   isWhiteBg: boolean = true;
-  datalistoftaple: Datalistorganizationanc[] = [];
-  selectedRows: Datalistorganizationanc[] = [];
+  datalistoftaple: PersonListInterface[] = [];
+  selectedRows: PersonListInterface[] = [];
 
   constructor(
-    private dataoforganizationlistService: DataoforganizationlistService,
+    private personListServiceService: PersonListServiceService,
     private router: Router,
     private sharedDataService: SharedDataServiceService
   ) { }
@@ -81,38 +84,36 @@ export class PresonsListComponent implements OnInit {
   createOrganisationseinheit(): void {
     this.sharedDataService.clearSelectedOrganization();
 
-    this.router.navigate(['/organization/new']);
+    this.router.navigate(['/products', ' ']);
   }
 
   toggleInactive(): void {
 
     if (this.includeInactive) {
-      this.dataSource.data = this.dataoforganizationlistService.getAllData();
+      this.dataSource.data = this.personListServiceService.getAllData();
     } else {
-      this.dataSource.data = this.dataoforganizationlistService.getActiveData();
+      this.dataSource.data = this.personListServiceService.getActiveData();
     }
-
     this.applyFilter();
   }
 
 
   ngOnInit(): void {
-    this.dataSource.data = this.dataoforganizationlistService.getActiveData();
-    this.dataSource.filterPredicate = (data: Datalistorganizationanc, filter: string) => {
+    this.dataSource.data = this.personListServiceService.getActiveData();
+    console.log("deleted",this.dataSource.data)
+    this.dataSource.filterPredicate = (data: PersonListInterface , filter: string) => {
       return (
-        data.kurzBezeichnung?.toLowerCase().includes(filter) ||
-        data.bezeichnung?.toLowerCase().includes(filter)
+        data.nachname?.toLowerCase().includes(filter) ||
+        data.vorname?.toLowerCase().includes(filter)
       );
     };
     this.reloadData();
   }
   reloadData() {
-    this.dataSource.data = this.dataoforganizationlistService.getActiveData();
+    this.dataSource.data = this.personListServiceService.getActiveData();
   }
 
-  selectRow(row: Datalistorganizationanc): void {
-    this.selectedRows = [row]; // Clear previous selections and select only the current row
-    this.sharedDataService.setSelectedOrganization(row);
-    this.router.navigate(['/organization/new']);
-  }
+    selectRow(id: string): void {
+  this.router.navigate(['/products', id]);
+}
 }

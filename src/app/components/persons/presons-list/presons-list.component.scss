@@ -1,1 +1,15 @@
-@use '../../organisition/organisation-list/organisation-list.component.scss' as *
+@use '../../organisition/organisation-list/organisation-list.component.scss' as *;
+.icon-true {
+  color: green;
+  font-weight: bold;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.icon-false {
+  color: red;
+  font-weight: bold;
+  font-size: 22px;
+  vertical-align: middle;
+}
+

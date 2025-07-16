@@ -10,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #338e9c;
-  padding: 5px 20px;
+  padding: 5px ;
   color: white;
   border: 1px solid #0c4450;
 }
@@ -159,7 +159,7 @@ mat-row:hover {
 }
 
 mat-row.selected-row {
-  background-color: #e0e0e0;
+  background-color: #f0e0e0;
   font-weight: 500;
 }
 
@@ -171,5 +171,4 @@ mat-checkbox {
 }
 .deleted-row {
   color: #b91c1c !important; /* نص أحمر غامق */
-  font-weight: bold;
 }
