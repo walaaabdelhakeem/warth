@@ -21,10 +21,7 @@ import { AbsenceComponent } from './components/absence/absence/absence.component
 import { OrganizationdetailsComponent } from './components/organisition/organisation-details/organisation-details.component';
 import { OrganizationlistComponent } from './components/organisition/organisation-list/organisation-list.component';
 import { PresonsListComponent } from './components/persons/presons-list/presons-list.component';
-<<<<<<< HEAD
 import { PresonsDetailsComponent } from './components/persons/presons-details/presons-details.component';
-=======
->>>>>>> 3cb4bd9814ae655b23ad68bba5e7d9541b05a639
 
 export const routes: Routes = [
   { path: '', redirectTo: 'edit-absence', pathMatch: 'full' },

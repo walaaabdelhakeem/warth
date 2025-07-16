@@ -10,11 +10,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #338e9c;
-<<<<<<< HEAD
   padding: 5px ;
-=======
-  padding: 5px 20px;
->>>>>>> 3cb4bd9814ae655b23ad68bba5e7d9541b05a639
   color: white;
   border: 1px solid #0c4450;
 }
@@ -163,11 +159,7 @@ mat-row:hover {
 }
 
 mat-row.selected-row {
-<<<<<<< HEAD
   background-color: #f0e0e0;
-=======
-  background-color: #e0e0e0;
->>>>>>> 3cb4bd9814ae655b23ad68bba5e7d9541b05a639
   font-weight: 500;
 }
 
@@ -179,8 +171,4 @@ mat-checkbox {
 }
 .deleted-row {
   color: #b91c1c !important; /* نص أحمر غامق */
-<<<<<<< HEAD
-=======
-  font-weight: bold;
->>>>>>> 3cb4bd9814ae655b23ad68bba5e7d9541b05a639
 }
