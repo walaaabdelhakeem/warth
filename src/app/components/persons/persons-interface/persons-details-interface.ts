@@ -18,7 +18,7 @@ export interface PersonsDetailsInterface {
   telefonNummer: string
   emailPrivat: string
   staatsangehoerigkeit: string
-  organisationseinheit: Organisationseinheit
+  organisationseinheit: Organisationseinheit 
   rolle: string
   bucher: string
   recht: string[]
