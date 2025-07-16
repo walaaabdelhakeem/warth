@@ -1,1 +1,67 @@
-<p>presons-details works!</p>
+<div class="details-wrapper" *ngIf="form">
+  <form [formGroup]="form">
+    <h2>Personendaten</h2>
+
+    <div class="form-section">
+      <mat-form-field appearance="outline">
+        <mat-label>Titel</mat-label>
+        <input matInput formControlName="titel" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Vorname</mat-label>
+        <input matInput formControlName="vorname" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nachname</mat-label>
+        <input matInput formControlName="nachname" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Geburtsdatum</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="gebdat" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefon</mat-label>
+        <input matInput formControlName="telefonNummer" />
+      </mat-form-field>
+    </div>
+
+    <h2>Organisationseinheit</h2>
+
+    <div class="form-section">
+      <mat-form-field appearance="outline">
+        <mat-label>Bezeichnung</mat-label>
+        <input matInput formControlName="bezeichnung" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Kurzbezeichnung</mat-label>
+        <input matInput formControlName="kurzBezeichnung" />
+      </mat-form-field>
+    </div>
+
+    <h2>Betriebsdaten</h2>
+
+    <div class="form-section">
+      <mat-form-field appearance="outline">
+        <mat-label>Mitarbeiterart</mat-label>
+        <input matInput formControlName="mitarbeiterart" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Firma</mat-label>
+        <input matInput formControlName="firma" />
+      </mat-form-field>
+    </div>
+  </form>
+</div>
