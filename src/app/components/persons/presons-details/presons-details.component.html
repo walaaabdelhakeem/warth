@@ -1,67 +1,492 @@
-<div class="details-wrapper" *ngIf="form">
-  <form [formGroup]="form">
-    <h2>Personendaten</h2>
+<div class="form-container ">
+  <div class="form-header">
+    <div class="form-toolbar">
+      <div class="flex gap-4">
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="onCancel()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
 
-    <div class="form-section">
-      <mat-form-field appearance="outline">
-        <mat-label>Titel</mat-label>
-        <input matInput formControlName="titel" />
-      </mat-form-field>
+        <button
+          *ngIf="isFormEditable"
+          type="button"
+          class="cancel-btn"
+          (click)="onCancel()"
+          [disabled]="saving">
+          <mat-icon>close</mat-icon>
+          Abbrechen
+        </button>
+      </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Vorname</mat-label>
-        <input matInput formControlName="vorname" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Nachname</mat-label>
-        <input matInput formControlName="nachname" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Geburtsdatum</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="gebdat" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Telefon</mat-label>
-        <input matInput formControlName="telefonNummer" />
-      </mat-form-field>
+      <h2 class="form-title">
+        {{ !isEditMode ? "Neue Organisationseinheit anlegen" :
+        "Organisationseinheit bearbeiten" }}
+      </h2>
+      <div>
+        <button
+          type="button"
+          class="save-btn"
+          (click)="onEditOrSubmit()"
+          [disabled]="saving">
+          <mat-icon>{{ isFormEditable ? 'check' : 'edit' }}</mat-icon>
+          {{ isFormEditable ? 'Speichern' : 'Bearbeiten' }}
+        </button>
+      </div>
     </div>
+  </div>
 
-    <h2>Organisationseinheit</h2>
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Daten werden geladen...</p>
+  </div>
 
-    <div class="form-section">
-      <mat-form-field appearance="outline">
-        <mat-label>Bezeichnung</mat-label>
-        <input matInput formControlName="bezeichnung" />
-      </mat-form-field>
+  <div class=" table-content scrollable-container">
+    <mat-accordion>
+      <form [formGroup]="form" class=" form-content ">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Kurzbezeichnung</mat-label>
-        <input matInput formControlName="kurzBezeichnung" />
-      </mat-form-field>
-    </div>
+        <!-- Personendaten -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Personendaten</mat-panel-title>
+          </mat-expansion-panel-header>
 
-    <h2>Betriebsdaten</h2>
+          <div formGroupName="personData" class="form-grid">
 
-    <div class="form-section">
-      <mat-form-field appearance="outline">
-        <mat-label>Mitarbeiterart</mat-label>
-        <input matInput formControlName="mitarbeiterart" />
-      </mat-form-field>
+            <div class="form-row checkbox-row">
+              <label class="form-label">Eingabe geprüft</label>
+              <mat-checkbox formControlName="inputVerified"></mat-checkbox>
+            </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Firma</mat-label>
-        <input matInput formControlName="firma" />
-      </mat-form-field>
-    </div>
-  </form>
+            <div class="form-row checkbox-row">
+              <label class="form-label">Activ</label>
+              <mat-checkbox formControlName="active"></mat-checkbox>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Titel:</label>
+              <mat-form-field appearance="outline" class="form-field">
+                <input matInput formControlName="title" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Staatsangehörigkeit:</label>
+              <mat-form-field appearance="outline" class="form-field">
+                <input matInput formControlName="nationality" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Familienname:</label>
+              <mat-form-field appearance="outline" class="form-field">
+                <input matInput formControlName="familyName" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Vorname:</label>
+              <mat-form-field appearance="outline" class="form-field">
+                <input matInput formControlName="firstName" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Geburtsdatum:</label>
+              <mat-form-field appearance="outline"
+                class="form-field date-range-field  label-input-group">
+                <input matInput [matDatepicker]="birthPicker"
+                  formControlName="birthDate" />
+                <mat-datepicker-toggle matSuffix
+                  [for]="birthPicker"></mat-datepicker-toggle>
+                <mat-datepicker #birthPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Geschlecht:</label>
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-select formControlName="gender"
+                  class="full-width-select">
+                  <mat-option value="männlich">Männlich</mat-option>
+                  <mat-option value="weiblich">Weiblich</mat-option>
+                  <mat-option value="divers">Divers</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label">Anmerkung:</label>
+              <mat-form-field appearance="outline" class="form-field">
+                <textarea matInput formControlName="note" rows="4"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Organisationsdaten -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Organisationsdaten:</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div formGroupName="organizationData"
+            class="form-grid scrollable-container">
+            <!-- Eintritts- / Austrittsdatum -->
+            <div class="form-row date">
+              <label class="field-label">Eintritts / Austrittsdatum:</label>
+              <mat-form-field appearance="outline"
+                class=" date-range-field  label-input-group">
+                <input matInput [matDatepicker]="entryDatePicker"
+                  formControlName="entryDate" value="25.11.2024" />
+                <mat-datepicker-toggle matSuffix
+                  [for]="entryDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #entryDatePicker></mat-datepicker>
+              </mat-form-field>
+              <span class="date-separator">/</span>
+              <mat-form-field appearance="outline"
+                class=" date-range-field  label-input-group">
+                <input matInput [matDatepicker]="exitDatePicker"
+                  formControlName="exitDate" value="31.12.9999" />
+                <mat-datepicker-toggle matSuffix
+                  [for]="exitDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #exitDatePicker></mat-datepicker>
+              </mat-form-field>
+
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Organisationseinheit:</label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="organizationalUnit"
+                  placeholder="Organisationseinheit wählen">
+                  <mat-option value>< Organisationseinheit wählen
+                    ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Mitarbeiterart:</label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="employeeType"
+                  placeholder="Mitarbeiterart wählen">
+                  <mat-option value>< Mitarbeiterart wählen ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Email geschäftlich:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="email"
+                  formControlName="businessEmail"
+                  placeholder="email@bmi.gv.at" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Email extern:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="email"
+                  formControlName="externalEmail"
+                  placeholder="email@example.com" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Dienstverwendung:</label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="employmentUse"
+                  placeholder="Dienstverwendung wählen">
+                  <mat-option value>< Dienstverwendung wählen ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Personenverantwortlichen:</label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="responsiblePerson"
+                  placeholder="Personenverantwortlichen wählen">
+                  <mat-option value>< Personenverantwortlichen wählen
+                    ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Telefonnummer:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="tel"
+                  formControlName="phoneNumber"
+                  placeholder="+43 1 123456" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Mobilnummer BMI:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="tel"
+                  formControlName="mobileNumberBMI"
+                  placeholder="+43 664 123456" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Mobilnummer extern:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="tel"
+                  formControlName="externalMobileNumber"
+                  placeholder="+43 664 123456" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Teamzuordnung:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  formControlName="teamAssignment"
+                  placeholder="Teamzuordnung" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Teamleiter:</label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="teamLeader"
+                  placeholder="Teamleiter wählen">
+                  <mat-option value>< Teamleiter wählen ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Zimmernummer:</label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  formControlName="roomNumber"
+                  placeholder="Zimmernummer" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Freigebegruppe:</label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="releaseGroup"
+                  placeholder="Freigebegruppe wählen">
+                  <mat-option value>< Freigebegruppe wählen ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-row mt-2 checkbox-row">
+
+              <label class="field-label ">Funktion:</label>
+              <div class="flex">
+                <mat-checkbox
+                  formControlName="isTeamLeader">Teamleiter</mat-checkbox>
+                <mat-checkbox
+                  formControlName="isDepartmentLeader">Abteilungsleiter</mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Betriebsdaten -->
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Betriebsdaten</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div formGroupName="operationalData"
+            class="form-grid scrollable-container">
+            <!-- الصف الأول -->
+            <div class="form-row">
+              <label class="field-label">Personalnr.:</label>
+              <mat-form-field appearance="outline">
+                <input matInput formControlName="personalNumber"
+                  placeholder="Personalnummer" />
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <span class="field-label">Selbständig:</span>
+              <mat-checkbox
+                formControlName="selfEmployed"
+                class="margin-top: -5px;"></mat-checkbox>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Portal-User-ID:</label>
+              <mat-form-field appearance="outline">
+                <input matInput formControlName="portalUserId"
+                  placeholder="Portal-User-ID" />
+              </mat-form-field>
+            </div>
+
+            <!-- الصف الثاني -->
+            <div class="form-row">
+              <label class="field-label">Beschäftigt bei:</label>
+              <mat-form-field appearance="outline">
+                <input matInput formControlName="employedAt"
+                  placeholder="Beschäftigt bei" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">BAKS-ID:</label>
+              <mat-form-field appearance="outline">
+                <input matInput formControlName="baksId"
+                  placeholder="BAKS-ID" />
+              </mat-form-field>
+            </div>
+
+            <!-- الصف الثالث -->
+            <div class="form-row">
+              <label class="field-label">Geht-Rolle:</label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="geltlRole"
+                  placeholder="Geht-Rolle wählen">
+                  <mat-option value>Default</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <label class="field-label">Interessenskonflikte:</label>
+              <mat-form-field appearance="outline"
+                class="date-range-field  label-input-group">
+                <input matInput [matDatepicker]="interessenPicker"
+                  formControlName="conflictOfInterest"
+                  placeholder="TT.MM.JJJJ" />
+                <mat-datepicker-toggle matSuffix
+                  [for]="interessenPicker"></mat-datepicker-toggle>
+                <mat-datepicker #interessenPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="form-row">
+              <label class="field-label">Bucher:</label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="bucher"
+                  placeholder="Bucher wählen">
+                  <mat-option value>< Bucher wählen ></mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- الصف الرابع -->
+            <div class="form-row">
+              <label class="field-label">Strafregisterbescheinigung:</label>
+              <mat-form-field appearance="outline"
+                class="date-range-field  label-input-group">
+                <input matInput [matDatepicker]="strafPicker"
+                  formControlName="criminalRecord" placeholder="TT.MM.JJJJ" />
+                <mat-datepicker-toggle matSuffix
+                  [for]="strafPicker"></mat-datepicker-toggle>
+                <mat-datepicker #strafPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <label class="field-label">Leistungskategorie:</label>
+              <mat-form-field appearance="outline">
+                <input matInput formControlName="performanceCategory"
+                  placeholder="Leistungskategorie" />
+              </mat-form-field>
+            </div>
+
+            <!-- الصف السادس -->
+
+            <div class="left-column flex gap-3">
+              <!-- الصف الأول -->
+              <div class="form-row">
+                <label class="field-label ">Stundenkontingent jährlich:</label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" formControlName="annualHours"
+                    placeholder="Stunden" />
+                </mat-form-field>
+              </div>
+
+              <!-- الصف الثاني -->
+              <div class="form-row">
+                <label class="field-label">Stundenkontingent Vertrag:</label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" formControlName="contractHours"
+                    placeholder="Stunden" />
+                </mat-form-field>
+              </div>
+
+              <!-- الصف الثالث -->
+              <div class="form-row">
+                <label class="field-label">Stundensatz inkl. UST.:</label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" step="0.01"
+                    formControlName="hourlyRate" placeholder="€" />
+                </mat-form-field>
+              </div>
+
+              <!-- الصف الرابع -->
+              <div class="form-row">
+                <label class="field-label">Stundensatz Bereitschaft:</label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" step="0.01"
+                    formControlName="onCallRate" placeholder="€" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- الصف الثامن -->
+            <div class="form-row">
+              <label class="field-label">Rechte:</label>
+              <div class="flex align-content-start"
+                style="gap: 8px; font-size: 12px; margin-top: -5px;">
+                <mat-checkbox formControlName="canStamp">Stempen</mat-checkbox>
+                <mat-checkbox formControlName="lanAccess">Freier LAN
+                  Zugang</mat-checkbox>
+                <mat-checkbox formControlName="remoteUser">Remote
+                  User</mat-checkbox>
+                <mat-checkbox
+                  formControlName="onCall">Bereitschaft</mat-checkbox>
+                <mat-checkbox formControlName="officeStamp">Online Stempeln
+                  Büro</mat-checkbox>
+                <mat-checkbox formControlName="homeOfficeStamp">Online Stempeln
+                  Homeoffice</mat-checkbox>
+                <mat-checkbox
+                  formControlName="teleworker">Telearbeiter</mat-checkbox>
+              </div>
+            </div>
+            <div class="form-row">
+              <span class="field-label">Leer-PDF erzeugen:</span>
+              <mat-checkbox formControlName="leerPdf"
+                class="margin-top: -10px;"></mat-checkbox>
+            </div>
+
+          </div>
+        </mat-expansion-panel>
+
+        
+
+      </form>
+
+    </mat-accordion>
+
+  </div>
 </div>

@@ -21,7 +21,7 @@ import { AbsenceComponent } from './components/absence/absence/absence.component
 import { OrganizationdetailsComponent } from './components/organisition/organisation-details/organisation-details.component';
 import { OrganizationlistComponent } from './components/organisition/organisation-list/organisation-list.component';
 import { PresonsListComponent } from './components/persons/presons-list/presons-list.component';
-import { PresonsDetailsComponent } from './components/persons/presons-details/presons-details.component';
+import { PersonsDetailsComponent } from './components/persons/presons-details/presons-details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'edit-absence', pathMatch: 'full' },
@@ -43,8 +43,7 @@ export const routes: Routes = [
   { path: 'person-form', component: PersonFormComponent },
   { path: 'personen', component: PersonenListComponent },
   { path: 'personen/:id', component: PersonenDetailComponent },
-  { path: 'products', component: ProdukteComponent },
-  { path: 'products/:id', component: PresonsDetailsComponent },
+  { path: 'products/:id', component: PersonsDetailsComponent },
   { path: 'contracts', component: TimeTrackingTableComponent },
   { path: 'organization', component: OrganisationseinheitListComponent },
   { path: 'organization2', component: OrganizationlistComponent },

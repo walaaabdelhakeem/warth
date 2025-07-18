@@ -39,7 +39,7 @@ export interface PersonsDetailsInterface {
   strafregisterbescheid: string
   teamleiter: Teamleiter
   funktion: string[]
-  freigabegruppe: string
+  freigabegruppe?: string
   vertrag: Vertrag[]
   stundenGeplantDiesesJahr: number
   stundenGebuchtDiesesJahr: string

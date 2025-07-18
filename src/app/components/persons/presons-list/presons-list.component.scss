@@ -9,7 +9,36 @@
 .icon-false {
   color: red;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 20px;
   vertical-align: middle;
+}
+.personen-table {
+  width: 100%;
+  .small-col {
+    width: 60px;
+    min-width: 30px;
+    max-width: 60px;
+    text-align: center;
+  }
+
+  .mat-header-row,
+  .mat-row {
+    display: flex;
+
+  }
+
+  .mat-cell,
+  .mat-header-cell {
+    flex: 0.5;
+ display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  }
+
+  .small-col {
+    flex: 0 0 60px !important;
+
+  }
 }
 

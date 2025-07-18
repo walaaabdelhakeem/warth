@@ -1,0 +1,105 @@
+@use '../../organisition/organisation-details/organisation-details.component.scss' as *;
+
+.section-container {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+form {
+  margin: 0 1rem;
+
+}
+
+.form-content {
+  padding: 0;
+}
+
+.section-header {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-header select {
+  font-size: 14px;
+  padding: 4px;
+}
+
+input,
+textarea {
+  width: 300px !important;
+  min-width: 105px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.75rem 1.5rem;
+  align-items: start;
+}
+
+mat-select {
+  width: 300px !important;
+  min-width: 105px;
+}
+
+.form-label {
+  width: 200px;
+  text-align: right;
+}
+
+.checkbox-row {
+  display: flex;
+  justify-content: left;
+}
+
+
+.scrollable-container {
+  max-height: 80vh; 
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.label-input-group {
+  input{
+    width: 142px !important;
+
+  }
+}
+.align-content-start{mat-checkbox{
+  height: 17px;
+}}
+form .flex {
+  display: flex;
+  flex-direction: column;
+  
+  .mat-mdc-checkbox.mat-mdc-checkbox-disabled label {
+
+      font-size: 16px !important;
+      font-size: medium !important;
+
+  }
+}
+.form-row{
+  justify-content: start;
+}
+mat-expansion-panel-header{
+      background-color: #338e9c;
+color: #f9f9f9;
+}
+mat-expansion-panel-header:hover{
+      background-color: #f9f9f9;
+color:  #338e9c;
+}  .table-content {
+  overflow: auto;
+  height: calc(100vh - 200px) !important;
+}
+.left-column input{
+  width:150px !important;
+}

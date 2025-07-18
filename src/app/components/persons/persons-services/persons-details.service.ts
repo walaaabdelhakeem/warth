@@ -1,4 +1,13 @@
-{
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { PersonsDetailsInterface } from '../persons-interface/persons-details-interface';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PersonsDetailsService {
+  private jsonUrl :PersonsDetailsInterface[]= [{
   "id": "1500000000579",
   "version": 161,
   "deleted": false,
@@ -1728,4 +1737,25 @@
   ],
   "stundenGeplantDiesesJahr": 52,
   "stundenGebuchtDiesesJahr": "19.37"
+}]; // مسار ملف الجيسون
+
+  constructor() {}
+
+  getPersons(): PersonsDetailsInterface[]{
+    return this.jsonUrl;
+  }
+   addPerson(person: PersonsDetailsInterface): void {
+    this.jsonUrl.push(person);
+  }
+
+  updatePerson(updatedPerson: PersonsDetailsInterface): void {
+    const index = this.jsonUrl.findIndex(p => p.id === updatedPerson.id);
+    if (index !== -1) {
+      this.jsonUrl[index] = updatedPerson;
+    }
+  }
+
+  getPersonById(id: string): PersonsDetailsInterface | undefined {
+    return this.jsonUrl.find(person => person.id === id);
+  }
 }

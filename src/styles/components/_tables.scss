@@ -202,7 +202,7 @@
 /* Table Content Wrapper */
 .table-content {
   overflow: auto;
-  max-height: calc(100vh - 300px);
+  height: calc(100vh - 200px) !important;
 }
 
 /* Table Styling */

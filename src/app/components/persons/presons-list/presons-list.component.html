@@ -52,12 +52,12 @@
         </button>
     </mat-menu>
     <div class="table-content">
-        <mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+        <mat-table [dataSource]="dataSource" class="mat-elevation-z8 personen-table"
             aria-label="Liste der Personen">
 
             <ng-container matColumnDef="aktiv">
-                <mat-header-cell *matHeaderCellDef>Aktiv</mat-header-cell>
-                <mat-cell *matCellDef="let person">
+                <mat-header-cell *matHeaderCellDef class="small-col">Aktiv</mat-header-cell>
+                <mat-cell *matCellDef="let person" class="small-col">
                     <mat-icon
                         [ngClass]="person.aktiv ? 'icon-true' : 'icon-false'">
                         {{ person.aktiv==true ? 'check' : 'close' }}
@@ -66,8 +66,8 @@
             </ng-container>
 
             <ng-container matColumnDef="geprueft">
-                <mat-header-cell *matHeaderCellDef>Geprüft</mat-header-cell>
-                <mat-cell *matCellDef="let person">
+                <mat-header-cell *matHeaderCellDef class="small-col">Geprüft</mat-header-cell>
+                <mat-cell *matCellDef="let person" class="small-col">
                     <mat-icon
                         [ngClass]="person.geprueft ? 'icon-true' : 'icon-false'">
                         {{ person.geprueft ? 'check_circle' : 'help' }}
