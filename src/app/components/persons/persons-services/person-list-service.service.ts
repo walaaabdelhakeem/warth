@@ -11316,7 +11316,6 @@ export class PersonListServiceService {
   getAllData(): PersonListInterface[] {
     return this.datalistPerson;
   }
-  // تحديث مؤسسة موجودة
   updateOrganization(updated: PersonListInterface): void {
     const index = this.datalistPerson.findIndex(org => org.id === updated.id);
     if (index !== -1) {

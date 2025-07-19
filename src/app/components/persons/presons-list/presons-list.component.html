@@ -90,7 +90,7 @@
             <ng-container matColumnDef="mitarbeiterart">
                 <mat-header-cell
                     *matHeaderCellDef>Mitarbeiterart</mat-header-cell>
-                <mat-cell *matCellDef="let person">{{ person.mitarbeiterart ||
+                <mat-cell *matCellDef="let person">{{ capitalizeText(person.mitarbeiterart) ||
                     '-' }}</mat-cell>
             </ng-container>
 
@@ -120,7 +120,7 @@
             </ng-container>
             <ng-container matColumnDef="rolle">
                 <mat-header-cell *matHeaderCellDef>Rolle</mat-header-cell>
-                <mat-cell *matCellDef="let person">{{ person.rolle }}</mat-cell>
+                <mat-cell *matCellDef="let person">{{capitalizeText(person.rolle)  }}</mat-cell>
             </ng-container>
 
             <mat-header-row

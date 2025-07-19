@@ -52,50 +52,58 @@
             <mat-panel-title>Personendaten</mat-panel-title>
           </mat-expansion-panel-header>
 
-          <div formGroupName="personData" class="form-grid">
+          <div formGroupName="personData"
+            class="form-grid scrollable-container">
 
-            <div class="form-row checkbox-row">
-              <label class="form-label">Eingabe geprüft</label>
-              <mat-checkbox formControlName="inputVerified"></mat-checkbox>
+            <!-- Checkbox: Eingabe geprüft / Activ -->
+            <div class="form-row mt-2 checkbox-row">
+              <label class="field-label">Eingabe geprüft:</label>
+              <mat-checkbox style="  margin-top: -10px;
+" formControlName="inputVerified"></mat-checkbox>
             </div>
 
             <div class="form-row checkbox-row">
-              <label class="form-label">Activ</label>
-              <mat-checkbox formControlName="active"></mat-checkbox>
+              <label class="field-label">Aktiv:</label>
+              <mat-checkbox style="  margin-top: -10px;" formControlName="active"></mat-checkbox>
             </div>
 
+            <!-- Titel -->
             <div class="form-row">
-              <label class="form-label">Titel:</label>
-              <mat-form-field appearance="outline" class="form-field">
+              <label class="field-label">Titel:</label>
+              <mat-form-field appearance="outline">
                 <input matInput formControlName="title" />
               </mat-form-field>
             </div>
 
+            <!-- Staatsangehörigkeit -->
             <div class="form-row">
-              <label class="form-label">Staatsangehörigkeit:</label>
-              <mat-form-field appearance="outline" class="form-field">
+              <label class="field-label">Staatsangehörigkeit:</label>
+              <mat-form-field appearance="outline">
                 <input matInput formControlName="nationality" />
               </mat-form-field>
             </div>
 
+            <!-- Familienname -->
             <div class="form-row">
-              <label class="form-label">Familienname:</label>
-              <mat-form-field appearance="outline" class="form-field">
+              <label class="field-label">Familienname:</label>
+              <mat-form-field appearance="outline">
                 <input matInput formControlName="familyName" />
               </mat-form-field>
             </div>
 
+            <!-- Vorname -->
             <div class="form-row">
-              <label class="form-label">Vorname:</label>
-              <mat-form-field appearance="outline" class="form-field">
+              <label class="field-label">Vorname:</label>
+              <mat-form-field appearance="outline">
                 <input matInput formControlName="firstName" />
               </mat-form-field>
             </div>
 
+            <!-- Geburtsdatum -->
             <div class="form-row">
-              <label class="form-label">Geburtsdatum:</label>
+              <label class="field-label">Geburtsdatum:</label>
               <mat-form-field appearance="outline"
-                class="form-field date-range-field  label-input-group">
+                class="date-range-field label-input-group">
                 <input matInput [matDatepicker]="birthPicker"
                   formControlName="birthDate" />
                 <mat-datepicker-toggle matSuffix
@@ -104,11 +112,11 @@
               </mat-form-field>
             </div>
 
+            <!-- Geschlecht -->
             <div class="form-row">
-              <label class="form-label">Geschlecht:</label>
-              <mat-form-field appearance="outline" class="form-field">
-                <mat-select formControlName="gender"
-                  class="full-width-select">
+              <label class="field-label">Geschlecht:</label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="gender">
                   <mat-option value="männlich">Männlich</mat-option>
                   <mat-option value="weiblich">Weiblich</mat-option>
                   <mat-option value="divers">Divers</mat-option>
@@ -116,13 +124,16 @@
               </mat-form-field>
             </div>
 
+            <!-- Anmerkung -->
             <div class="form-row">
-              <label class="form-label">Anmerkung:</label>
-              <mat-form-field appearance="outline" class="form-field">
+              <label class="field-label">Anmerkung:</label>
+              <mat-form-field appearance="outline">
                 <textarea matInput formControlName="note" rows="4"></textarea>
               </mat-form-field>
             </div>
+
           </div>
+
         </mat-expansion-panel>
 
         <!-- Organisationsdaten -->
@@ -301,7 +312,7 @@
             <div class="form-row mt-2 checkbox-row">
 
               <label class="field-label ">Funktion:</label>
-              <div class="flex">
+              <div class="flex" style="  margin-top: -10px;">
                 <mat-checkbox
                   formControlName="isTeamLeader">Teamleiter</mat-checkbox>
                 <mat-checkbox
@@ -330,7 +341,7 @@
             </div>
             <div class="form-row">
               <span class="field-label">Selbständig:</span>
-              <mat-checkbox
+              <mat-checkbox style="  margin-top: -10px;"
                 formControlName="selfEmployed"
                 class="margin-top: -5px;"></mat-checkbox>
             </div>
@@ -476,14 +487,124 @@
             <div class="form-row">
               <span class="field-label">Leer-PDF erzeugen:</span>
               <mat-checkbox formControlName="leerPdf"
-                class="margin-top: -10px;"></mat-checkbox>
+                style="margin-top: -10px;"></mat-checkbox>
             </div>
 
           </div>
         </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Vertragsdaten</mat-panel-title>
+            <mat-checkbox (click)="$event.stopPropagation()" [checked]="true"
+              style="margin-right: 10px;">
+              inkl. inaktive
+            </mat-checkbox>
+          </mat-expansion-panel-header>
 
-        
+          <div class="contracts-container">
+            <!-- Main Contract -->
+            <div class="contract-header"
+              (click)="toggleContractExpansion('contract1')">
+              <mat-icon class="expand-icon">
+                {{expandedContracts['contract1'] ? 'expand_more' :
+                'chevron_right'}}
+              </mat-icon>
+              <span class="contract-title">BMI/IBM Leistungspartnerschaft
+                2018</span>
+              <div class="contract-values">
+                <span>Geplant: 1.602,00</span>
+                <span>Gebucht: 1.600,00</span>
+              </div>
+            </div>
 
+            <!-- Nested Items (shown when expanded) -->
+            <div class="nested-items" *ngIf="expandedContracts['contract1']">
+              <!-- Sub Contract -->
+              <div class="contract-header level-1"
+                (click)="toggleContractExpansion('subContract1')">
+                <mat-icon class="expand-icon">
+                  {{expandedContracts['subContract1'] ? 'expand_more' :
+                  'chevron_right'}}
+                </mat-icon>
+                <span class="contract-title">BMI/IBM Leistungspartnerschaft
+                  2019</span>
+                <div class="contract-values">
+                  <span>Geplant: 1.938,00</span>
+                  <span>Gebucht: 1.672,77</span>
+                </div>
+              </div>
+
+              <!-- Nested under sub contract -->
+              <div class="nested-items"
+                *ngIf="expandedContracts['subContract1']">
+                <!-- Level 1 Item -->
+                <div class="contract-item level-1">
+                  <span class="item-title">Betrieb Anwendungen 2020</span>
+                  <div class="item-values">
+                    <span>Volumen €: 1.350.000,00</span>
+                    <span>Volumen Std.: 4.500</span>
+                    <span>Geplant: 277</span>
+                  </div>
+                </div>
+
+                <!-- Level 2 Item -->
+                <div class="contract-item level-2">
+                  <mat-icon class="person-icon">person</mat-icon>
+                  <span class="item-title">Thiem Peter Franz</span>
+                  <div class="item-values">
+                    <span>Volumen €: 61.776,00</span>
+                    <span>Gesamt: 400</span>
+                    <span>Geplant: 252</span>
+                  </div>
+                </div>
+
+                <!-- Another Level 1 Item -->
+                <div class="contract-item level-1">
+                  <span class="item-title">Betrieb Anwendungen 2023</span>
+                  <div class="item-values">
+                    <span>Volumen €: 3.503,90</span>
+                    <span>Volumen Std.: 48</span>
+                    <span>Geplant: 13</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Other main level items -->
+              <div class="contract-item level-0">
+                <span class="item-title">BBO 2025</span>
+                <div class="item-values">
+                  <span>Volumen €: 100.000,00</span>
+                  <span>Volumen Std.: 500</span>
+                  <span>Geplant: 5</span>
+                </div>
+                <div class="person-reference">
+                  <mat-icon>person</mat-icon>
+                  <span>Thiem Peter Franz</span>
+                </div>
+              </div>
+
+              <div class="contract-item level-0">
+                <span class="item-title">Testauswertung 2019</span>
+                <div class="item-values">
+                  <span>Volumen €: 199,00</span>
+                  <span>Volumen Std.: 2</span>
+                </div>
+                <div class="person-reference">
+                  <mat-icon>person</mat-icon>
+                  <span>Thiem Peter Franz</span>
+                </div>
+              </div>
+
+              <div class="contract-item level-0">
+                <span class="item-title">BeID Projekt 2019 / 2020</span>
+                <div class="item-values">
+                  <span>Geplant: 2,00</span>
+                  <span>Gebucht: 2,00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
       </form>
 
     </mat-accordion>

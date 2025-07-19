@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PersonsDetailsInterface } from '../persons-interface/persons-details-interface';
+import { PersonsDetailsInterface, Vertrag } from '../persons-interface/persons-details-interface';
 import { PersonsDetailsService } from '../persons-services/persons-details.service';
 import { CommonModule } from '@angular/common';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -18,7 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatDivider } from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-persons-details',
@@ -36,8 +36,9 @@ import { MatDivider } from '@angular/material/divider';
     MatIconModule,
     MatCardModule,
     MatExpansionModule,
-    MatTooltipModule, MatRadioModule,MatDivider
-
+    MatTooltipModule,
+    MatRadioModule,
+    MatDividerModule
   ],
   templateUrl: './presons-details.component.html',
   styleUrl: './presons-details.component.scss'
@@ -50,8 +51,8 @@ export class PersonsDetailsComponent implements OnInit {
   persons: PersonsDetailsInterface[] = [];
   isFormEditable = false;
   saving = false;
-  openSections: { [key: string]: boolean } = {}; // Fix added
-  contractsData: any[] = []; // Dummy placeholder to prevent error from missing property
+  openSections: { [key: string]: boolean } = {};
+  contractsData: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -68,27 +69,21 @@ export class PersonsDetailsComponent implements OnInit {
   }
 
   initializeForm(): void {
-  this.id = this.route.snapshot.paramMap.get('id');
-
-  if (!this.id || this.id.trim() === '') {
-  // id فاضي → فضي الإنبتس
-  this.createEmptyForm();
-  this.isEditMode = false;
-  this.isFormEditable = true;
-} else {
-  // id موجود → استخدمي القيمة الثابتة بدل id اللي جاي
-  this.id = '1500000000579';
-  const selectedPerson = this.persons.find(p => p.id === this.id);
-  if (selectedPerson) {
-    this.createForm(selectedPerson);
-    this.isEditMode = true;
-    this.form.disable();
-  } else {
-    this.createEmptyForm();
+    if (!this.id || this.id.trim() === '') {
+      this.createEmptyForm();
+      this.isEditMode = false;
+      this.isFormEditable = true;
+    } else {
+      const selectedPerson = this.persons.find(p => p.id === '1500000000579');
+      if (selectedPerson) {
+        this.createForm(selectedPerson);
+        this.isEditMode = true;
+        this.form.disable();
+      } else {
+        this.createEmptyForm();
+      }
+    }
   }
-}
-
-}
 
   createForm(data: PersonsDetailsInterface): void {
     this.form = this.fb.group({
@@ -147,8 +142,7 @@ export class PersonsDetailsComponent implements OnInit {
         selfEmployed: [data.selbststaendig || false],
         employedAt: [data.firma || ''],
         geltlRole: [data.rolle || ''],
-        bucher: [data.bucher || '']
-      ,
+        bucher: [data.bucher || ''],
         canStamp: [data.recht?.includes('Stempeln') || false],
         lanAccess: [data.recht?.includes('LAN-Zugang') || false],
         remoteUser: [data.recht?.includes('Remote-User') || false],
@@ -157,88 +151,126 @@ export class PersonsDetailsComponent implements OnInit {
         homeOfficeStamp: [data.recht?.includes('HomeOffice-Stempeln') || false],
         teleworker: [data.recht?.includes('Teleworker') || false]
       }),
-      vertragsdat: this.fb.group({
-    steuernummer: [''],
-    svnummer: [''],
-    abteilung: [''],
-    position: [''],
-    telefon: [''],
-    mobiltelefon: [''],
-    emailPrivat: [''],
-    strasse: [''],
-    hausnummer: [''],
-    plz: [''],
-    ort: [''],
-    land: [''],
-    iban: [''],
-    bic: [''],
-    kontoinhaber: [''],
-    bemerkungen: [''],
-  }),
+
+      vertragsdat: this.fb.array(this.buildContractsArray(data.vertrag || []))
     });
+  }
+get vertragsArray(): FormArray {
+  return this.form.get('vertragsdat') as FormArray;
+}
+  private buildContractsArray(contracts: Vertrag[]): FormGroup[] {
+    return contracts.map(contract => this.fb.group({
+      vertragsname: [contract.vertragsname || ''],
+      stundenGeplant: [contract.stundenGeplant || ''],
+      stundenGebucht: [contract.stundenGebucht || ''],
+      vertragssumme: [contract.vertragssumme || ''],
+      gueltigVon: [contract.gueltigVon || ''],
+      gueltigBis: [contract.gueltigBis || ''],
+      aktiv: [contract.aktiv || false],
+      vertragsTyp: [contract.vertragsTyp || ''],
+      vertragPosition: this.fb.array(this.buildPositionsArray(contract.vertragPosition || []))
+    }));
+  }
+
+  private buildPositionsArray(positions: any[]): FormGroup[] {
+    return positions.map(pos => this.fb.group({
+      position: [pos.position || ''],
+      volumenStunden: [pos.volumenStunden || ''],
+      volumenEuro: [pos.volumenEuro || ''],
+      stundenGeplant: [pos.stundenGeplant || ''],
+      stundenGebucht: [pos.stundenGebucht || ''],
+      planungsjahr: [pos.planungsjahr || ''],
+      jahresuebertrag: [pos.jahresuebertrag || false],
+      vertragPositionVerbraucher: this.fb.array(this.buildVerbraucherArray(pos.vertragPositionVerbraucher || []))
+    }));
+  }
+
+  private buildVerbraucherArray(verbraucher: any[]): FormGroup[] {
+    return verbraucher.map(v => this.fb.group({
+      volumenStunden: [v.volumenStunden || ''],
+      volumenEuro: [v.volumenEuro || ''],
+      stundenGeplant: [v.stundenGeplant || ''],
+      stundenGebucht: [v.stundenGebucht || ''],
+      verbraucherTyp: [v.verbraucherTyp || '']
+    }));
+  }
+
+  get vertragsdat(): FormArray {
+    return this.form.get('vertragsdat') as FormArray;
+  }
+
+  getVertragPositionControls(contractIndex: number): FormArray {
+    return this.vertragsdat.at(contractIndex).get('vertragPosition') as FormArray;
+  }
+
+  getVerbraucherControls(contractIndex: number, positionIndex: number): FormArray {
+    return this.getVertragPositionControls(contractIndex)
+      .at(positionIndex)
+      .get('vertragPositionVerbraucher') as FormArray;
   }
 
   createEmptyForm(): void {
-  this.form = this.fb.group({
-    personData: this.fb.group({
-      inputVerified: [false],
-      title: [''],
-      familyName: ['', Validators.required],
-      firstName: ['', Validators.required],
-      birthDate: [''],
-      gender: [''],
-      active: [false],
-      nationality: [''],
-      note: ['']
-    }),
+    this.form = this.fb.group({
+      personData: this.fb.group({
+        inputVerified: [false],
+        title: [''],
+        familyName: ['', Validators.required],
+        firstName: ['', Validators.required],
+        birthDate: [''],
+        gender: [''],
+        active: [false],
+        nationality: [''],
+        note: ['']
+      }),
 
-    organizationData: this.fb.group({
-      entryDate: [''],
-      exitDate: [''],
-      businessEmail: ['', [Validators.email]],
-      externalEmail: ['', [Validators.email]],
-      phoneNumber: [''],
-      mobileNumberBMI: [''],
-      externalMobileNumber: [''],
-      roomNumber: [''],
-      releaseGroup: [''],
-      organizationalUnit: [''],
-      employeeType: [''],
-      employmentUse: [''],
-      responsiblePerson: [''],
-      teamAssignment: [''],
-      teamLeader: [''],
-      isTeamLeader: [false],
-      isDepartmentLeader: [false]
-    }),
+      organizationData: this.fb.group({
+        entryDate: [''],
+        exitDate: [''],
+        businessEmail: ['', [Validators.email]],
+        externalEmail: ['', [Validators.email]],
+        phoneNumber: [''],
+        mobileNumberBMI: [''],
+        externalMobileNumber: [''],
+        roomNumber: [''],
+        releaseGroup: [''],
+        organizationalUnit: [''],
+        employeeType: [''],
+        employmentUse: [''],
+        responsiblePerson: [''],
+        teamAssignment: [''],
+        teamLeader: [''],
+        isTeamLeader: [false],
+        isDepartmentLeader: [false]
+      }),
 
-    operationalData: this.fb.group({
-      personalNumber: [''],
-      leerPdf: [false],
-      portalUserId: [''],
-      baksId: [''],
-      criminalRecord: [''],
-      conflictOfInterest: [''],
-      performanceCategory: [''],
-      annualHours: [''],
-      contractHours: [''],
-      hourlyRate: [''],
-      onCallRate: [''],
-      selfEmployed: [false],
-      employedAt: [''],
-      geltlRole: [''],
-      bucher: [''],
-      canStamp: [false],
-      lanAccess: [false],
-      remoteUser: [false],
-      onCall: [false],
-      officeStamp: [false],
-      homeOfficeStamp: [false],
-      teleworker: [false]
-    })
-  });
-}
+      operationalData: this.fb.group({
+        personalNumber: [''],
+        leerPdf: [false],
+        portalUserId: [''],
+        baksId: [''],
+        criminalRecord: [''],
+        conflictOfInterest: [''],
+        performanceCategory: [''],
+        annualHours: [''],
+        contractHours: [''],
+        hourlyRate: [''],
+        onCallRate: [''],
+        selfEmployed: [false],
+        employedAt: [''],
+        geltlRole: [''],
+        bucher: [''],
+        canStamp: [false],
+        lanAccess: [false],
+        remoteUser: [false],
+        onCall: [false],
+        officeStamp: [false],
+        homeOfficeStamp: [false],
+        teleworker: [false]
+      }),
 
+      vertragsdat: this.fb.array([])
+    });
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -250,7 +282,7 @@ export class PersonsDetailsComponent implements OnInit {
     const formValue = this.form.value;
     const id = this.id || this.generateId();
 
-    const personData = {
+    const personData: PersonsDetailsInterface = {
       id,
       version: 1,
       deleted: false,
@@ -299,29 +331,44 @@ export class PersonsDetailsComponent implements OnInit {
         funktion: [],
         vertrag: []
       },
-      vertrag: [{
+      vertrag: formValue.vertragsdat?.map((v: any) => ({
         id: '',
         version: 1,
         deleted: false,
-        vertragsname: '',
+        vertragsname: v.vertragsname,
         vertragspartner: '',
         erstelldatum: '',
-        gueltigVon: '',
-        gueltigBis: '',
-        aktiv: true,
+        gueltigVon: v.gueltigVon,
+        gueltigBis: v.gueltigBis,
+        aktiv: v.aktiv,
         auftraggeber: '',
         vertragszusatz: '',
-        vertragssumme: '',
-        vertragsTyp: '',
-        vertragPosition: [],
+        vertragssumme: v.vertragssumme,
+        vertragsTyp: v.vertragsTyp,
+        vertragPosition: v.vertragPosition?.map((p: any) => ({
+          position: p.position,
+          volumenStunden: p.volumenStunden,
+          volumenEuro: p.volumenEuro,
+          stundenGeplant: p.stundenGeplant,
+          stundenGebucht: p.stundenGebucht,
+          planungsjahr: p.planungsjahr,
+          jahresuebertrag: p.jahresuebertrag,
+          vertragPositionVerbraucher: p.vertragPositionVerbraucher?.map((vb: any) => ({
+            volumenStunden: vb.volumenStunden,
+            volumenEuro: vb.volumenEuro,
+            stundenGeplant: vb.stundenGeplant,
+            stundenGebucht: vb.stundenGebucht,
+            verbraucherTyp: vb.verbraucherTyp
+          }))
+        })),
         lkKennung: false,
         lkDetails: [],
         trigger: [],
-        stundenGeplant: '',
-        stundenGebucht: '',
+        stundenGeplant: v.stundenGeplant,
+        stundenGebucht: v.stundenGebucht,
         anmerkung: formValue.personData.note
-      }],
-      recht: this.getSelectedRights(formValue.rights),
+      })) || [],
+      recht: this.getSelectedRights(formValue.operationalData),
       stundenkontingentJaehrlich: formValue.operationalData.annualHours,
       stundenkontingentJaehrlichVertrag: formValue.operationalData.contractHours,
       stundensatz: formValue.operationalData.hourlyRate,
@@ -334,9 +381,10 @@ export class PersonsDetailsComponent implements OnInit {
       windowsBenutzerkonto: formValue.operationalData.baksId,
       strafregisterbescheid: formValue.operationalData.criminalRecord,
       leistungskategorie: formValue.operationalData.performanceCategory,
-      leerPdf: false,
+      leerPdf: formValue.operationalData.leerPdf,
       stundenGeplantDiesesJahr: 0,
-      stundenGebuchtDiesesJahr: '0'
+      stundenGebuchtDiesesJahr: '0',
+      freigabegruppe: formValue.organizationData.releaseGroup
     };
 
     if (this.isEditMode) {
@@ -390,11 +438,13 @@ export class PersonsDetailsComponent implements OnInit {
 
   private getSelectedRights(rights: any): string[] {
     const selectedRights = [];
-    for (const [key, value] of Object.entries(rights)) {
-      if (value) {
-        selectedRights.push(key);
-      }
-    }
+    if (rights?.canStamp) selectedRights.push('Stempeln');
+    if (rights?.lanAccess) selectedRights.push('LAN-Zugang');
+    if (rights?.remoteUser) selectedRights.push('Remote-User');
+    if (rights?.onCall) selectedRights.push('Bereitschaft');
+    if (rights?.officeStamp) selectedRights.push('Dienstort-Stempeln');
+    if (rights?.homeOfficeStamp) selectedRights.push('HomeOffice-Stempeln');
+    if (rights?.teleworker) selectedRights.push('Teleworker');
     return selectedRights;
   }
 
@@ -403,9 +453,16 @@ export class PersonsDetailsComponent implements OnInit {
       control.markAsTouched();
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
+      } else if (control instanceof FormArray) {
+        control.controls.forEach(arrayControl => {
+          if (arrayControl instanceof FormGroup) {
+            this.markFormGroupTouched(arrayControl);
+          }
+        });
       }
     });
   }
+
   isSectionOpen(section: string): boolean {
     return this.openSections[section] || false;
   }
@@ -424,8 +481,14 @@ export class PersonsDetailsComponent implements OnInit {
     const detail = contract?.details.find((d: any) => d.id === detailId);
     if (detail) detail.expanded = !detail.expanded;
   }
-get vertragsdatGroup(): FormGroup {
-  return this.form.get('vertragsdat') as FormGroup;
-}
+  
+  expandedContracts: {[key: string]: boolean} = {
+    contract1: true,
+    subContract1: true
+  };
+
+  toggleContractExpansion(contractId: string): void {
+    this.expandedContracts[contractId] = !this.expandedContracts[contractId];
+  }
 
 }
